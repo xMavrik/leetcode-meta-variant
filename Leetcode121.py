@@ -28,6 +28,7 @@ returns = [1, 6, 10, 2, 9]
 
 class CheapFlight:
 
+
     def travel(self, departures, returns):
 
         min_depart = departures[0]
@@ -117,15 +118,24 @@ test_cases = [
     },
 ]
 
-
-
 def main():
     cheap = CheapFlight()
+    passed, failed = 0, 0
 
     for i, case in enumerate(test_cases, 1):
         result = cheap.travel(case["departures"], case["returns"])
-        print(f"Test {i}: Result={result}, Expected={case['expected']}, Pass={result == case['expected']}")
+        if result == case["expected"]:
+            print(f"Test {i}: ✅ Passed (Result={result}, Expected={case['expected']})")
+            passed += 1
+        else:
+            print(f"Test {i}: ❌ Failed (Result={result}, Expected={case['expected']})")
+            failed += 1
 
+    total = passed + failed
+    percent = (passed / total) * 100 if total > 0 else 0
+    print("\n--- Summary ---")
+    print(f"Total: {total} | ✅ Passed: {passed} | ❌ Failed: {failed}")
+    print(f"Pass Rate: {percent:.2f}%")
 
 if __name__ == "__main__":
     main()
