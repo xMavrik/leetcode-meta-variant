@@ -10,21 +10,6 @@ Welcome! This document serves as a roadmap for my application journey to join Me
 - **Engage**: Build meaningful connections with current Meta employees.
 - **Persevere**: Stay resilient and motivated throughout the process.
 
-## Key Experiences
-
-1. **Technical Expertise**
-   - Developed full-stack applications using React and Node.js.
-   - Implemented scalable microservices architectures.
-   - Led a team of developers to create a high-performance web platform.
-
-2. **Continuous Learning**
-   - Completed Meta's online courses to stay up-to-date.
-   - Attended webinars and workshops focused on cutting-edge technologies.
-
-3. **Networking Efforts**
-   - Engaged in tech meetups and conferences.
-   - Connected with Meta employees for guidance and insights.
-
 ## Feedback Implementation
 
 - Addressed skill gaps identified in previous attempt.
@@ -34,22 +19,6 @@ Welcome! This document serves as a roadmap for my application journey to join Me
 
 > "It is hard to fail, but it is worse never to have tried to succeed."  
 > — **Theodore Roosevelt**
-
-This powerful statement by President Roosevelt echoes my belief in persistence. With every step, I strive to improve and learn from the past, ready to seize the opportunity at hand.
-
-## Action Plan
-
-1. **Skill Enhancement**
-   - Focus on mastering algorithms and data structures.
-   - Participate in coding challenges to sharpen problem-solving abilities.
-
-2. **Networking Strategy**
-   - Reach out to Meta employees on professional networks for mentorship.
-   - Attend events related to Meta's initiatives to gain deeper insights.
-
-3. **Application Process**
-   - Update resume to reflect recent achievements and improvements.
-   - Craft a compelling cover letter that communicates passion and competence.
 
 ## Repository Content
 
@@ -68,12 +37,6 @@ Each file in this repository represents a variant version of common LeetCode que
    - Advanced graph algorithm variations reflecting the structure and demands often encountered in Meta's infrastructure.
 
 5. **`dynamic_programming_variant.py`**
-   - Creative implementations of dynamic programming challenges tailored to enhance strategic thinking and runtime efficiency.
 
-## Conclusion
 
-My dedication to joining Meta remains unwavering. Armed with experience, feedback, and a renewed sense of determination inspired by leaders like Theodore Roosevelt, I'm prepared to make my second attempt successful. Thank you for taking the time to understand my journey.
 
----
-
-Embarking on this journey once again, I am more equipped and determined than ever. Let's make this an incredible chapter in my career story.
