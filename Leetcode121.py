@@ -32,7 +32,6 @@ class CheapFlight:
     def travel(self, departures, returns):
 
         min_depart = departures[0]
-
         cheapest_price = float("inf")
 
         for x in range(1, len(departures)):
