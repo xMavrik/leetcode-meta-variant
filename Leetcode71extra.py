@@ -35,7 +35,6 @@ Output: "/a/d/f"
 """
 
 
-
 class PathSimplifier:
     def simplifyPath(self, cwd: str, cd: str) -> str:
         
