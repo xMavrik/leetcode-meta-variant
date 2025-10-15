@@ -41,13 +41,11 @@ class PathSimplifier:
         
         if not cd:
             return cwd
+        
+        parts = []
 
         # Determine if cd is absolute
-        if cd.startswith("/"):
-            parts = []
-            
-        else:
-            # Split cwd into usable pieces
+        if not cd.startswith("/"):
             parts = [p for p in cwd.split("/") if p and p != "."]
 
         # Process cd path
@@ -62,7 +60,6 @@ class PathSimplifier:
 
         # Build final result
         return "/" + "/".join(parts)
-
 
 
 # Test cases
