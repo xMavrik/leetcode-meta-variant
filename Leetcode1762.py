@@ -21,41 +21,67 @@ Explanation:
 from typing import List
 
 
+class Solution:
 
-def findBuildings(heights) -> List[int]:
+    def findBuildings(self, heights):
 
-    stack_left = []
+        n = len(heights)
+        
+        if n == 1:
+            return [0]
 
-    max_left = 0
+        left, right = 0, n - 1
+        left_view = [left]
+        right_view = [right]
+        left_max = heights[left]
+        right_max = heights[right]
 
-    stack_right = []
+        while left < right:
+            if left_max < right_max:
+                left += 1
+                if heights[left] > left_max and left < right:
+                    left_view.append(left)
+                    left_max = heights[left]
+            else:
+                right -= 1
+                if heights[right] > right_max and left < right:
+                    right_view.append(right)
+                    right_max = heights[right]
 
-    max_right = 0
-
-    left, right = 0, len(heights) - 1
-
-    while left <= right:
-
-        if heights[left] > max_left:
-            max_left = heights[left]
-            stack_left.append(left)
-
-        left += 1
-
-        if heights[right] > max_right:
-            max_right = heights[right]
-            stack_right.append(right)
-
-        right -= 1
-
-    stack_left.extend(stack_right[::-1])
-
-    return stack_left
+        left_view.extend(reversed(right_view))
+        return left_view
 
 
-heights1 = [2, 5, 3, 10, 9, 8]
+def test_solution():
+    solution = Solution()
+    
+    # Define test cases
+    test_cases = [
+        ([2, 5, 3, 10, 9, 8], [0, 1, 3, 4, 5]),
+        ([1], [0]),
+        ([4, 4, 4, 4], [0, 3]),
+        ([10, 9, 8, 7, 6], [0, 1, 2, 3, 4]),
+        ([1, 2, 3, 4, 5], [0, 1, 2, 3, 4]),
+        ([3, 4, 3, 2, 1, 5], [0, 1, 5])
+    ]
 
-print(findBuildings(heights1))
+    # Check each test case
+    all_passed = True
+    for i, (heights, expected) in enumerate(test_cases):
+        result = solution.findBuildings(heights)
+        print(result)
+        if result == expected:
+            print(f"Test Case {i + 1}: True")
+        else:
+            print(f"Test Case {i + 1}: False")
+            all_passed = False
+    
+    return all_passed
 
-def test_answer():
-    assert findBuildings(heights1) == [0, 1, 3, 4, 5]
+
+# Run the tests
+if test_solution():
+    print("All test cases passed.")
+else:
+    print("Some test cases failed.")
+
