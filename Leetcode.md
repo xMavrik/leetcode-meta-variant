@@ -1,26 +1,26 @@
 ## Non-Functional Requirements
 
-Optimize for availability over consistency; small scale (≤ ~400k users, ~4k problems).
+* Optimize for availability over consistency; small scale (≤ ~400k users, ~4k problems).
 
-Isolation & security for code execution (containers, read-only FS, CPU/Mem limits, timeout ≤ 5s, no network, seccomp).
+* Isolation & security for code execution (containers, read-only FS, CPU/Mem limits, timeout ≤ 5s, no network, seccomp).
 
-Latency SLA: submission result in ≤ 5s (or async + rapid polling).
+* Latency SLA: submission result in ≤ 5s (or async + rapid polling).
 
-Scale target: competitions up to 100k users (burst handling, horizontal scale).
+* Scale target: competitions up to 100k users (burst handling, horizontal scale).
 
-Simplicity over over-engineering; polling acceptable (e.g., 5s).
+* Simplicity over over-engineering; polling acceptable (e.g., 5s).
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
 ## Core Entities
 
-Problem: id, title, level, tags, question, language code stubs, testCases[].
+* Problem: id, title, level, tags, question, language code stubs, testCases[].
 
-Submission: userId, problemId, code, language, passed/result, timings.
+* Submission: userId, problemId, code, language, passed/result, timings.
 
-Leaderboard: competitionId → userId score/time rankings.
+* Leaderboard: competitionId → userId score/time rankings.
 
-Competition: id, start/end, problems[10], scoring rules (solves; tie-break by total time).
+* Competition: id, start/end, problems[10], scoring rules (solves; tie-break by total time).
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -49,33 +49,34 @@ Note: userId from session/JWT; timestamps server-side.
 
 ## High-Level Design
 
-Editor: in-browser (e.g., Monaco) for multi-lang coding.
+* Client ↔ API Server (monolith OK); design flows per endpoint.
 
-Client–Server (monolith OK): API Server + DB; orient flows per endpoint.
+* Problems DB: NoSQL (e.g., DynamoDB). Problems embed testCases & codeStubs. Indexes for pagination.
 
-Problems storage: NoSQL (e.g., DynamoDB); nested testCases & codeStubs; proper indexes for pagination.
+* Code Execution: language-specific containers (avoid cold starts). API → container → result → persist.
 
-Code execution: isolated containers per language (avoid cold starts); API hands code → container → result → persist.
+* Leaderboard (basic path): derive from submissions; client polls ~5s.
 
-Leaderboard (basic): derive from submissions; return to client; client polls ~5s.
+* Editor: in-browser (Monaco).
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
 ## Deep Dive (NF Focus)
 
-Execution Security: read-only FS; CPU/Mem limits; hard timeout (≤5s); no network (VPC rules/NACLs); seccomp to restrict syscalls.
+* Execution Security: read-only FS; CPU/Mem limits; ≤5s timeout; no network (VPC/NACL); seccomp.
 
-Leaderboard at scale: Redis Sorted Set per competition
+* Leaderboard @ scale: Redis Sorted Set per competition
 
-Updates on submission: ZADD competition:leaderboard:{id} score userId
+* Update on pass: ZADD competition:leaderboard:{id} score userId
 
-Reads: ZREVRANGE ... 0 N-1 WITHSCORES; 5s polling; serve top N + paging.
+* Read top-N: ZREVRANGE ... 0 N-1 WITHSCORES
 
-Handling 100k users / bursts: add queue (e.g., SQS) between API and workers; workers pull, execute, persist, update Redis; /check/:id polled ~1s.
+* Client polls ~5s; serve top 1k + server paging.
 
-Test harnessing: standardized serialization for inputs/outputs; per-lang harness deserializes (e.g., TreeNode), invokes user code, compares to expected; one test spec works across languages.
+* Burst Handling (100k users): Queue (SQS) between API and workers; workers pull, run, persist, update Redis; client polls GET /check/:id ~1s. Adds retries/back-pressure.
 
-Trade-offs: Polling ≪ complexity of WebSockets here; queue adds retries/back-pressure; monolith fine at this scale, microservices optional.
+* Test Harnessing: standardized serialization for inputs/outputs; per-lang harness deserializes (e.g., TreeNode) → invoke user code → compare to expected. One test spec, many languages.
 
+* Trade-offs: polling ≪ complexity of WebSockets here; monolith fine for size; microservices optional.
 
 
