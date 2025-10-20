@@ -1,10 +1,10 @@
 ## Non-Functional Requirements
 
-* Optimize for availability over consistency; small scale (≤ ~400k users, ~4k problems).
+* availability > consistency; small scale (≤ ~400k users, ~4k problems).
 
-* Isolation & security for code execution (containers, read-only FS, CPU/Mem limits, timeout ≤ 5s, no network, seccomp).
+* Isolation & security for code execution (containers, read-only file system, CPU/Mem limits, timeout ≤ 5s, no network (VPC), seccomp).
 
-* Latency SLA: submission result in ≤ 5s (or async + rapid polling).
+* Latency SLA: submission result in ≤ 5s
 
 * Scale target: competitions up to 100k users (burst handling, horizontal scale).
 
@@ -14,9 +14,11 @@
 
 ## Core Entities
 
-* Problem: id, title, level, tags, question, language code stubs, testCases[].
+* Problem: (id, title, level, tags, question text, language code stubs, testCases[])
 
-* Submission: userId, problemId, code, language, passed/result, timings.
+* Submission: (submissionID, userId, problemId, code, language, queued/running/passed/failed, time results)
+
+* User: (userID, email)
 
 * Leaderboard: competitionId → userId score/time rankings.
 
@@ -36,10 +38,9 @@ GET /problems/:id?language=python        -> Problem
 
 * Submit solution (sync/async wrapper) -->
 POST /problems/:id/submit                -> Submission
-Body: { "code": string, "language": string }
 
 * Poll submission status (if async path) -->
-GET /check/:submissionId                 -> { status, result? }
+GET /check/:submissionId                 -> Submission Result
 
 * Leaderboard (paged) -->
 GET /leaderboard/:competitionId?page=1&limit=100 -> Leaderboard
@@ -49,31 +50,34 @@ Note: userId from session/JWT; timestamps server-side.
 
 ## High-Level Design
 
+* Editor: in-browser (Monaco).
+
 * Client ↔ API Server (monolith OK); design flows per endpoint.
 
-* Problems DB: NoSQL (e.g., DynamoDB). Problems embed testCases & codeStubs. Indexes for pagination.
+* Primary DB: NoSQL (e.g., DynamoDB). Problems embed testCases & codeStubs. Indexes for pagination.
 
-* Code Execution: language-specific containers (avoid cold starts). API → container → result → persist.
+* Fallback query for competitions, Use Partition key on competition; add Sort key for rank ordering (via inverted score + time). Use a GSI on userId if you need fast “what’s this user’s score in comp XYZ?” lookups.
+
+* Code Execution: language-specific lambdas with provisioned concurrency (avoid cold starts). API → container → result → persist.
+can use quick 200 calls for less popular languages to avoid cold start
+
+* Lambda container images (stored in ECR) because we have short-running executions and don't need complex docker
 
 * Leaderboard (basic path): derive from submissions; client polls ~5s.
-
-* Editor: in-browser (Monaco).
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
 ## Deep Dive (NF Focus)
 
-* Execution Security: read-only FS; CPU/Mem limits; ≤5s timeout; no network (VPC/NACL); seccomp.
+* Execution Security: read-only File System (tmp); CPU/Mem limits; ≤5s timeout; no network (VPC); seccomp
 
 * Leaderboard @ scale: Redis Sorted Set per competition
 
 * Update on pass: ZADD competition:leaderboard:{id} score userId
 
-* Read top-N: ZREVRANGE ... 0 N-1 WITHSCORES
-
 * Client polls ~5s; serve top 1k + server paging.
 
-* Burst Handling (100k users): Queue (SQS) between API and workers; workers pull, run, persist, update Redis; client polls GET /check/:id ~1s. Adds retries/back-pressure.
+* Burst Handling (100k users): Queue (SQS) and workers, use S3 to store code; workers pull, run, persist, update Redis; client polls GET /check/:id ~1s. Adds retries/back-pressure.
 
 * Test Harnessing: standardized serialization for inputs/outputs; per-lang harness deserializes (e.g., TreeNode) → invoke user code → compare to expected. One test spec, many languages.
 
