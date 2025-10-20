@@ -28,10 +28,10 @@
 
 * Note: userId via session/JWT; server-generated timestamps.
 
-* List problems (paged)
+* List problems (paged) || 
 GET /problems?page=1&limit=100           -> Partial<Problem>[]
 
-* Get problem (with language stub)
+* Get problem (with language stub) || 
 GET /problems/:id?language=python        -> Problem
 
 * Submit solution (sync/async wrapper)
