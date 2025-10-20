@@ -28,15 +28,22 @@ Competition: id, start/end, problems[10], scoring rules (solves; tie-break by to
 
 * Note: userId via session/JWT; server-generated timestamps.
 
-List problems (paged): GET /problems?page=1&limit=100 -> Partial<Problem>[]
+# List problems (paged)
+GET /problems?page=1&limit=100           -> Partial<Problem>[]
 
-Get problem (with stub): GET /problems/:id?language=python -> Problem
+# Get problem (with language stub)
+GET /problems/:id?language=python        -> Problem
 
-Submit solution: POST /problems/:id/submit {code, language} -> Submission
+# Submit solution (sync/async wrapper)
+POST /problems/:id/submit                -> Submission
+Body: { "code": string, "language": string }
 
-Check async status (if queued): GET /check/:submissionId -> {status,result?}
+# Poll submission status (if async path)
+GET /check/:submissionId                 -> { status, result? }
 
-Leaderboard (paged): GET /leaderboard/:competitionId?page=1&limit=100 -> Leaderboard
+# Leaderboard (paged)
+GET /leaderboard/:competitionId?page=1&limit=100 -> Leaderboard
+Note: userId from session/JWT; timestamps server-side.
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
