@@ -1,12 +1,12 @@
 ## Non-Functional Requirements
 
-Avail > Consistency for view/search; Consistency first for booking (no double-sell).
+Availability > Consistency for view/search; Consistency first for booking (no double-sell).
 
 Scale: hot events (10M users, 1 event); Reads 100:1 write.
 
-Latency: search <500 ms (cache + search index).
+Latency: search < 500 ms (cache + search index).
 
-Read-heavy: aggressive caching, horizontal scale, LB.
+Read-heavy: support high read throughput, caching, horizontal scale, LB.
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -28,13 +28,13 @@ Booking: id, userId, ticketIds[], total, status (in-progress/confirmed).
 
 ## API Design
 
-View event (+ seat map): GET /events/:eventId -> Event, Venue, Performer[], Ticket[]
+View event (+ seat map): GET /events/:eventId -> Event, Venue, PerformerID, Ticket[]
 
-Search (paged): GET /events/search?keyword&start&end&pageSize&page -> Event[]
+Search (paged): GET /events/search?keyword={keyword}&start={start_date}&end={end_date}&pageSize={page_size}&page={page_number} -> Event[] -> Event[]
 
-Book (simple start): POST /bookings/:eventId {ticketIds,paymentDetails} -> bookingId
+Book (simple start): POST /bookings/:eventId {ticketIds,paymentDetails} -> bookingID
 
-(Evolved) Reserve/confirm split:
+(This is for Deep Dive) Reserve/confirm split:
 POST /bookings/reserve {ticketId} -> bookingId
 POST /bookings/:bookingId/confirm {paymentToken} -> Booking
 
