@@ -13,6 +13,12 @@ num2 = "678.55"
 
 output = "134.61"
 
+
+NOTES:
+
+Someone got a variant wher you need to multiply the nums, follow up was what if there were decimals
+If so, soultion is easy, count all decimal numbers (aka 3 decimals), then multiply everything as if whole numbers, then place decimal 3 from the right
+
 """
 
 class Solution:
