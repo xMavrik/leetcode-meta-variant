@@ -23,6 +23,8 @@ Example 1:
 
 word = "helzzpme"
 abbr = "h2*p*me"
+
+return: True
 """
 
 class Solution:
@@ -83,6 +85,7 @@ def test():
     sol = Solution()
     assert sol.validWordAbbreviation("internationalization", "i12iz4n") == True
     assert sol.validWordAbbreviation("helzzpme", "h2*p*me") == True
+    assert sol.validWordAbbreviation("helzzwpme", "h2*p*me") == True
     assert sol.validWordAbbreviation("apple", "a2e") == False
     assert sol.validWordAbbreviation("substitution", "s10n") == True
     assert sol.validWordAbbreviation("connection", "c2nec*ion") == True

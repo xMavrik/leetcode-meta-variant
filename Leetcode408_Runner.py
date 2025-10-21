@@ -26,6 +26,7 @@ abbr = "h2*p*me"
 """
 
 
+
 class Solution:
     def validWordAbbreviation(self, word: str, abbr: str) -> bool:
         pass
