@@ -25,11 +25,6 @@ word = "helzzpme"
 abbr = "h2*p*me"
 """
 
-
-
-from functools import lru_cache
-
-
 class Solution:
     def validWordAbbreviation(self, word: str, abbr: str) -> bool:
 
@@ -40,15 +35,23 @@ class Solution:
         match = -1    # position in word that '*' has expanded to
 
         while word_ptr < len(word):
+
             # If digits: parse full number and skip in word
             if abbr_ptr < len(abbr) and abbr[abbr_ptr].isdigit():
                 skip = 0
                 while abbr_ptr < len(abbr) and abbr[abbr_ptr].isdigit():
-                    skip = skip * 10 + (ord(abbr[abbr_ptr]) - ord('0'))
+                    skip = skip * 10 + int(abbr[abbr_ptr])
                     abbr_ptr += 1
                 word_ptr += skip
                 if word_ptr > len(word):
                     return False
+                continue
+
+            # If both have a character and they match, advance with a while loop
+            if abbr_ptr < len(abbr) and word_ptr < len(word) and abbr[abbr_ptr] == word[word_ptr]:
+                while abbr_ptr < len(abbr) and word_ptr < len(word) and abbr[abbr_ptr] == word[word_ptr]:
+                    word_ptr += 1
+                    abbr_ptr += 1
                 continue
 
             # If '*' in abbr: record star and try matching empty first
@@ -56,12 +59,6 @@ class Solution:
                 star = abbr_ptr
                 match = word_ptr
                 abbr_ptr += 1  # let '*' initially match zero characters
-                continue
-
-            # If both have a character and they match, advance both
-            if abbr_ptr < len(abbr) and word_ptr < len(word) and abbr[abbr_ptr] == word[word_ptr]:
-                word_ptr += 1
-                abbr_ptr += 1
                 continue
 
             # Mismatch: try to use previous '*' to absorb one more char
@@ -79,7 +76,7 @@ class Solution:
         while abbr_ptr < len(abbr) and abbr[abbr_ptr] == '*':
             abbr_ptr += 1
 
-        return abbr_ptr == len(abbr)
+        return abbr_ptr == len(abbr) and word_ptr == len(word)
 
 
 def test():
@@ -94,3 +91,22 @@ def test():
 
 if __name__ == "__main__":
     test()
+
+
+"""
+
+When you have a previous '*' and you hit a mismatch:
+
+Let '*' absorb one more character from the word (match += 1, word_ptr = match).
+
+Reset abbr_ptr to just after the '*' (abbr_ptr = star + 1) and retry the same abbr suffix.
+
+If it still mismatches, repeat step 1.
+
+Stop if you either:
+
+eventually match the abbr suffix, or
+
+run out of word (then fail unless the remaining abbr is only '*'s).
+
+"""
