@@ -1,8 +1,3 @@
-
-
-
-# Prompt Description:
-
 """
 LeetCode Problem 408: Valid Word Abbreviation (with Wildcard Twist)
 
@@ -29,7 +24,9 @@ abbr = "h2*p*me"
 
 class Solution:
     def validWordAbbreviation(self, word: str, abbr: str) -> bool:
+        
         pass
+    
 
 
 def test():
@@ -40,6 +37,19 @@ def test():
     assert sol.validWordAbbreviation("substitution", "s10n") == True
     assert sol.validWordAbbreviation("connection", "c2nec*ion") == True
     assert sol.validWordAbbreviation("flexible", "fl*xible") == True
+
+    assert sol.validWordAbbreviation("abcdefg", "a*de*") == True
+    assert sol.validWordAbbreviation("zoom", "z1m") == False
+    assert sol.validWordAbbreviation("zoom", "z0m") == False
+    assert sol.validWordAbbreviation("jump", "j*mp") == True
+    assert sol.validWordAbbreviation("abc", "a1c") == True
+    assert sol.validWordAbbreviation("abbreviation", "a10n") == True
+    assert sol.validWordAbbreviation("abbreviation", "a10*") == True
+    assert sol.validWordAbbreviation("abbreviation", "a25n") == False
+    assert sol.validWordAbbreviation("testcase", "t*stcase") == True
+    assert sol.validWordAbbreviation("testcase", "t*e*se") == True
+    assert sol.validWordAbbreviation("example", "e*mpl*") == True
+
     print("All test cases passed!")
 
 if __name__ == "__main__":
