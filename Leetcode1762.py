@@ -24,13 +24,11 @@ from typing import List
 class Solution:
 
     def findBuildings(self, heights):
-
-        n = len(heights)
         
-        if n == 1:
+        if len(heights) == 1:
             return [0]
 
-        left, right = 0, n - 1
+        left, right = 0, len(heights) - 1
         left_view = [left]
         right_view = [right]
         left_max = heights[left]
@@ -69,7 +67,6 @@ def test_solution():
     all_passed = True
     for i, (heights, expected) in enumerate(test_cases):
         result = solution.findBuildings(heights)
-        print(result)
         if result == expected:
             print(f"Test Case {i + 1}: True")
         else:
