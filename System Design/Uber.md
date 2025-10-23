@@ -1,4 +1,4 @@
-Non-Functional Requirements
+## Non-Functional Requirements
 
 Low latency matching: target <1 min to match/fail.
 
@@ -8,7 +8,9 @@ High throughput: handle event spikes (e.g., 100k reqs from one area).
 
 (Below the line: security/GDPR, resilience/failover, monitoring/alerting, CI/CD.)
 
-Core Entities
+----------------------------------------------------------------------------------------------------------------------------------
+
+## Core Entities
 
 Rider (profile, payment).
 
@@ -20,7 +22,9 @@ Ride (rider, driver, route, state, actual fare, timestamps).
 
 Location (driver lat/long, lastUpdated).
 
-API Design
+----------------------------------------------------------------------------------------------------------------------------------
+
+## API Design
 
 Estimate fare: POST /fare -> Fare (body: pickupLocation, destination).
 
@@ -30,7 +34,9 @@ Update driver location: POST /drivers/location -> Success (lat,long; driverId fr
 
 Accept/decline ride: PATCH /rides/:rideId -> Ride (body: accept|deny).
 
-High-Level Design
+----------------------------------------------------------------------------------------------------------------------------------
+
+## High-Level Design
 
 Clients: Rider app, Driver app.
 
@@ -48,7 +54,9 @@ Request: Rider → /rides → RideSvc → trigger Matching.
 
 Match: LocationSvc ingests updates → Matching picks nearby → notify driver → driver PATCH accept/deny.
 
-Deep Dive (Quick Hits)
+----------------------------------------------------------------------------------------------------------------------------------
+
+## Deep Dive (Quick Hits)
 
 Geo scale & proximity: Redis GEOADD/GEOSEARCH; TTL on locations; persistence/Sentinel for HA.
 
