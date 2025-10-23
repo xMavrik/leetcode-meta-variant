@@ -1,5 +1,4 @@
-from collections import deque
-from typing import List, Union
+from typing import List
 
 # VARIANT: What if you had to define your own schema for NestedList and implement DFS?
 class Object:
