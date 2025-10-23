@@ -59,7 +59,7 @@ Fare: Rider → /fare → Ride Service ↔ Maps → DB → client.
 
 Request: Rider → /rides → Ride Service → trigger Matching.
 
-Match: LocationSvc ingests updates → Matching picks nearby → notify driver → driver PATCH accept/deny.
+Match: Location Service ingests updates → Matching picks nearby → notify driver → driver PATCH accept/deny.
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
