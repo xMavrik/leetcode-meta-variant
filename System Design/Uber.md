@@ -12,27 +12,34 @@ High throughput: handle event spikes (e.g., 100k reqs from one area).
 
 ## Core Entities
 
-Rider (profile, payment).
+Rider (profile, payment)
 
-Driver (profile, vehicle, availability).
+Driver (profile, vehicle, availability)
 
-Fare (pickup, dest, ETA, est. price).
+Fare (pickup, dest, ETA, est. price)
 
-Ride (rider, driver, route, state, actual fare, timestamps).
+Ride (rider, driver, route, state, actual fare, timestamps)
 
-Location (driver lat/long, lastUpdated).
+Location (driver lat/long, lastUpdated)
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
 ## API Design
 
-Estimate fare: POST /fare -> Fare (body: pickupLocation, destination).
+Estimate fare: POST /fare -> Fare 
+(body: pickupLocation, destination)
 
-Request ride: POST /rides -> Ride (body: fareId).
+Request ride: POST /rides -> Ride 
+(body: fareId)
 
-Update driver location: POST /drivers/location -> Success (lat,long; driverId from JWT).
+Update driver location: POST /drivers/location -> Success 
+(lat,long; driverId from JWT)
 
-Accept/decline ride: PATCH /rides/:rideId -> Ride (body: accept|deny).
+Accept/decline ride: PATCH /rides/:rideId -> Ride 
+(body: accept|deny)
+
+If we want to add polling driver location to user 
+GET /rides/{rideId}/driver-location -> Location<>
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -48,9 +55,9 @@ Infra: DB (Fare/Ride), Redis (geo/locks), third-party Maps, queue (Kafka/SQS).
 
 Flows:
 
-Fare: Rider → /fare → RideSvc ↔ Maps → DB → client.
+Fare: Rider → /fare → Ride Service ↔ Maps → DB → client.
 
-Request: Rider → /rides → RideSvc → trigger Matching.
+Request: Rider → /rides → Ride Service → trigger Matching.
 
 Match: LocationSvc ingests updates → Matching picks nearby → notify driver → driver PATCH accept/deny.
 
