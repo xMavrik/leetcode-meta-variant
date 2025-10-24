@@ -2,19 +2,14 @@
 
 133. Clone Graph
 
-
 Given a reference to a disconnected, unidrected graph. return a deep copy
 
 Graph contains a List[Node] of root nodes
 
-
 Each node in the graph contains a value (int) and a List[Node] of its neighbors
-
-
 
 Input: adjList = [[1,2,3],[4,5]]
 Output: [[1,2],[2,1],[1,3],[3,1],[2,3],[3,2],[4,5],[5,4]]
-
 
 class Node:
     def __init__(self, val = 0, neighbors = None):
@@ -26,13 +21,13 @@ class Graph:
         self.roots: List[Node] = []
 
 
-
 Beware: Meta may ask to define the classes yourself
 """
 
 from typing import List, Dict, Set
 from collections import deque
 from typing import Dict, Optional, List
+
 class Node:
     def __init__(self, val: int = 0, neighbors: Optional[List['Node']] = None):
         self.val = val
@@ -41,8 +36,6 @@ class Node:
 class Graph:
     def __init__(self):
         self.roots: List[Node] = []
-
-
 
 # =====================================ADD YOUR CODE HERE=====================================
 def clone_graph(roots: List[Node]) -> List[Node]:
@@ -55,14 +48,11 @@ def clone_graph(roots: List[Node]) -> List[Node]:
     def bfs(start: Node):
 
         q = deque([start])
-
         clone[start] = Node(start.val)
 
         while q:
             current = q.popleft()
-
             for neighbor in current.neighbors:
-
                 if neighbor not in clone:
                     clone[neighbor] = Node(neighbor.val)
                     q.append(neighbor)
@@ -74,8 +64,6 @@ def clone_graph(roots: List[Node]) -> List[Node]:
             bfs(root)
 
     return [clone[root] for root in roots]
-
-
 
 
 # 👇 Build graph from adjacency list input like [[1,2,3],[4,5]]
@@ -122,6 +110,6 @@ original_roots = build_graph(adj_list)
 cloned_roots = clone_graph(original_roots)
 
 # 🧾 Print results
-print("Original Graph Edges:", graph_to_edge_list(original_roots))
-print("Cloned Graph Edges:", graph_to_edge_list(cloned_roots))
+assert(graph_to_edge_list(original_roots) == graph_to_edge_list(cloned_roots))
+print("Passed All Test Cases!")
 
